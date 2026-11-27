@@ -54,7 +54,7 @@ More in [docs/media-buyers-week.md](docs/media-buyers-week.md).
 
 ## Connect through MCP
 
-This repository also deploys a read-only MCP server on Cloudflare Workers that serves the skills' instructions. Add the Worker's address plus `/mcp` (shown on the landing page) as a remote MCP server (custom connector) in your AI tool, then call `list_skills` and `get_skill`. Only skills marked `public: true` are served.
+This repository also deploys a read-only MCP server on Cloudflare Workers that serves the skills' instructions. The live address is `https://growwithskills-library.connor-d00.workers.dev/mcp` (checked on 2026-11-27). Add it as a remote MCP server (custom connector) in your AI tool, then call `list_skills` and `get_skill`. The landing page is at <https://growwithskills-library.connor-d00.workers.dev/>. Only skills marked `public: true` are served.
 
 ## Develop
 
