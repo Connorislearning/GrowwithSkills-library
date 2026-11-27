@@ -91,6 +91,6 @@ Every skill ends with a rule that the AI must not put client names or account ID
 
 The intended setup is Cloudflare Workers Builds connected to this GitHub repository, so that each push to `main` redeploys the Worker. There is no local deploy script; Workers Builds is the only deploy path.
 
-The Worker name is `skill-library`. The first deploy uses the `workers.dev` address. The custom domain `mcp.connorhancer.ai` is planned but is not configured in `wrangler.jsonc` yet, so check that any URL written in the README or the landing page actually works before publishing it.
+The Worker name is `growwithskills-library`, matching the GitHub repository name. The first deploy uses the `workers.dev` address. The custom domain `mcp.connorhancer.ai` is planned but is not configured in `wrangler.jsonc` yet, so check that any URL written in the README or the landing page actually works before publishing it.
 
 The landing page should use the portfolio's "Tech Innovation" theme: Electric Blue `#0066ff`, Neon Cyan `#00ffff`, Dark Gray `#1e1e1e`, White `#ffffff`, with Space Grotesk for headings and Inter for body text.
