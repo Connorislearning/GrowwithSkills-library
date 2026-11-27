@@ -1,0 +1,3 @@
+date,time,platform,account_label,level,campaign,ad_set,ad,change_type,old_value,new_value,why,status,source
+2026-11-18,11:30,meta,demo,ad_set,Retargeting,Site visitors 30d,,bid,,cost cap 40,testing cost cap,unconfirmed,told by user
+2026-11-20,16:12,meta,demo,ad,Prospecting,Broad 25-44,Hook B - founder story,status,active,paused,CTR down 30% after 3 weeks,confirmed,snapshot 2026-11-19 -> 2026-11-20

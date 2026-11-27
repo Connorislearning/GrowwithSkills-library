@@ -186,3 +186,11 @@ src/skills.generated.ts
 *.xlsx
 *.xls
 exports/
+
+# made-up sample data shipped with each skill is allowed
+!skills/*/*/samples/*.csv
+
+# local paid social database: private, never commit
+paid-social-data/
+*.db
+__pycache__/
