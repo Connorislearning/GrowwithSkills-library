@@ -3,8 +3,21 @@ import { createMcpHandler } from "agents/mcp/server";
 import { z } from "zod";
 import { SKILLS } from "./skills.generated";
 
-function createServer() {
-	const server = new McpServer({ name: "Skill Library", version: "0.1.0" });
+// Skill names are short slugs. Anything else is rejected before it is looked up or logged.
+const SKILL_NAME = /^[a-z0-9-]{1,64}$/;
+
+// Records one tool call: tool, skill and time only. Never blocks or fails the response.
+function logUsage(env: Env, ctx: ExecutionContext, tool: string, skill: string | null) {
+	ctx.waitUntil(
+		env.USAGE_DB.prepare("INSERT INTO usage_events (tool, skill) VALUES (?, ?)")
+			.bind(tool, skill)
+			.run()
+			.catch((err) => console.error("usage log failed", err)),
+	);
+}
+
+function createServer(env: Env, ctx: ExecutionContext) {
+	const server = new McpServer({ name: "Skill Library", version: "0.2.0" });
 
 	server.registerTool(
 		"list_skills",
@@ -14,25 +27,31 @@ function createServer() {
 			inputSchema: z.object({}),
 			annotations: { readOnlyHint: true, openWorldHint: false },
 		},
-		async () => ({
-			content: [
-				{
-					type: "text",
-					text: SKILLS.length ? SKILLS.map((s) => `${s.name}: ${s.description}`).join("\n") : "The library is empty.",
-				},
-			],
-		}),
+		async () => {
+			logUsage(env, ctx, "list_skills", null);
+			return {
+				content: [
+					{
+						type: "text",
+						text: SKILLS.length ? SKILLS.map((s) => `${s.name}: ${s.description}`).join("\n") : "The library is empty.",
+					},
+				],
+			};
+		},
 	);
 
 	server.registerTool(
 		"get_skill",
 		{
 			description: "Get the full instructions for one skill by name, then follow them.",
-			inputSchema: z.object({ name: z.string().describe("A skill name from list_skills") }),
+			inputSchema: z.object({
+				name: z.string().regex(SKILL_NAME, "Use a skill name from list_skills").describe("A skill name from list_skills"),
+			}),
 			annotations: { readOnlyHint: true, openWorldHint: false },
 		},
 		async ({ name }) => {
 			const skill = SKILLS.find((s) => s.name === name);
+			if (skill) logUsage(env, ctx, "get_skill", skill.name);
 			return {
 				content: [
 					{
@@ -46,8 +65,6 @@ function createServer() {
 
 	return server;
 }
-
-const handler = createMcpHandler(createServer);
 
 // TODO(Connor): paste your LinkedIn profile URL here. The link is hidden while this is empty.
 const LINKEDIN_URL = "";
@@ -95,11 +112,17 @@ ${cards}
 }
 
 export default {
-	fetch(request: Request, env: Env, ctx: ExecutionContext) {
+	async fetch(request: Request, env: Env, ctx: ExecutionContext) {
 		const url = new URL(request.url);
 		if (request.method === "GET" && (url.pathname === "/" || url.pathname === "")) {
 			return new Response(homePage(url.origin), { headers: { "content-type": "text/html; charset=utf-8" } });
 		}
-		return handler(request, env, ctx);
+		if (url.pathname.startsWith("/mcp")) {
+			// The caller's IP is used only as the rate-limit key. It is never stored or logged.
+			const caller = request.headers.get("cf-connecting-ip") ?? "unknown";
+			const { success } = await env.RATE_LIMITER.limit({ key: caller });
+			if (!success) return new Response("Too many requests. Try again in a minute.", { status: 429 });
+		}
+		return createMcpHandler(() => createServer(env, ctx))(request, env, ctx);
 	},
 } satisfies ExportedHandler<Env>;

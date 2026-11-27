@@ -6,5 +6,11 @@
 	"compatibility_flags": ["nodejs_compat"],
 	"build": { "command": "node scripts/bundle-skills.mjs" },
 	"workers_dev": true,
-	"observability": { "enabled": true }
+	"observability": { "enabled": true },
+	// Usage counter. Rows hold only tool, skill and time. The ID is not a secret.
+	"d1_databases": [
+		{ "binding": "USAGE_DB", "database_name": "skill-library-usage", "database_id": "9a1fdd28-2504-47c4-8ba0-7de553581e38", "migrations_dir": "migrations" }
+	],
+	// About 60 MCP requests per minute per caller, per Cloudflare location.
+	"ratelimits": [{ "name": "RATE_LIMITER", "namespace_id": "1001", "simple": { "limit": 60, "period": 60 } }]
 }
