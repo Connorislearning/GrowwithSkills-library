@@ -1,0 +1,27 @@
+name: Skills
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Skill format contract
+        run: python3 tests/check_skills.py
+      - name: Run every skill on its sample data
+        run: python3 tests/run_samples.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Bundle skills for the Worker
+        run: node scripts/bundle-skills.mjs

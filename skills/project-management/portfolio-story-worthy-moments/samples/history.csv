@@ -1,0 +1,4 @@
+date,time,platform,account_label,level,campaign,ad_set,ad,change_type,old_value,new_value,why,status,source
+2026-10-20,10:05,meta,demo,ad,Prospecting,Broad 25-44,Hook C - demo,created,,active,testing a product demo hook,confirmed,told by user
+2026-10-27,09:40,meta,demo,ad_set,Prospecting,Broad 25-44,,budget,300,450,Hook C beating account CPA by 40%,confirmed,snapshot 2026-10-26 -> 2026-10-27
+2026-11-20,16:12,meta,demo,ad,Prospecting,Broad 25-44,Hook B - founder story,status,active,paused,not given,unconfirmed,snapshot 2026-11-19 -> 2026-11-20

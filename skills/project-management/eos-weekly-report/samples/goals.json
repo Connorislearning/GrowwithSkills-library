@@ -1,0 +1,8 @@
+[
+ {"measurable": "Ad spend", "metric": "spend", "goal": 4000, "better": "higher", "owner": "Media buyer"},
+ {"measurable": "Purchases", "metric": "results", "goal": 180, "better": "higher", "owner": "Media buyer"},
+ {"measurable": "Cost per purchase", "metric": "cost_per_result", "goal": 22, "better": "lower", "owner": "Media buyer"},
+ {"measurable": "ROAS", "metric": "roas", "goal": 3.0, "better": "higher", "owner": "Media buyer"},
+ {"measurable": "CTR (%)", "metric": "ctr_pct", "goal": 1.0, "better": "higher", "owner": "Creative strategist"},
+ {"measurable": "Qualified leads (CRM)", "metric": "crm:Qualified leads", "goal": 40, "better": "higher", "owner": "Sales"}
+]
