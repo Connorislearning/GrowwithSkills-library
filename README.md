@@ -73,3 +73,23 @@ Connor Hancer builds and runs paid social reporting systems for teams. Contact: 
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## Usage stats
+
+Every MCP tool call adds one row to the `skill-library-usage` D1 database: the tool, the skill and the time. Nothing else is stored, so no IP addresses, user agents or request contents. To see the totals, open Cloudflare → Storage & databases → D1 → `skill-library-usage` → Console, and run:
+
+```sql
+SELECT skill, COUNT(*) AS uses, MAX(ts) AS last_used
+FROM usage_events WHERE tool = 'get_skill'
+GROUP BY skill ORDER BY uses DESC;
+```
+
+The table is created by `migrations/0001_usage_events.sql` (`npx wrangler d1 migrations apply skill-library-usage --remote`).
+
+## Security
+
+- Both tools are read-only. No tool writes, deletes or calls other systems.
+- Skill names are validated as short slugs before they are looked up or logged.
+- `/mcp` is rate limited to about 60 requests a minute per caller. The caller's IP is used only as the rate-limit key and is never stored.
+- No secrets are needed. If one is ever needed, use `npx wrangler secret put`, never `vars`.
+- Dependabot checks npm dependencies weekly.
